@@ -32,6 +32,8 @@ char writeI2CByte(unsigned char data, unsigned char reg_address);
 char writeI2CSingleByte(unsigned char data);
 char readI2C_N_Byte( unsigned char reg_address, unsigned char numElm, unsigned char buff[] );
 
+void initP20int();
+
 
 ///////////////////////////////////////////////
 #define		NACK_ERR		1

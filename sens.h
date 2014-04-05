@@ -15,7 +15,6 @@ typedef struct _colore{
 	int verde;
 	int blu;
 	int luminanza;
-	int presenza_OK;
 } colore;
 
 typedef struct _temp{

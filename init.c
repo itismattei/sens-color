@@ -126,3 +126,12 @@ void initTIMER(unsigned long FDCO){
 void initMCU(void){
 	;
 }
+
+///
+/// inizializza la porta 2 a funzionare ad interruzione sul pin 0
+/// gestisco ad interruzione la lettura del colore
+void initP20int(){
+	P2IES &= ~BIT0;                           // P2.0 Lo/Hi edge
+	P2IFG &= ~BIT0;                           // P2.0 IFG cleared
+	P2IE  |=  BIT0;                           // P2.0 interrupt enabled
+}

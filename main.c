@@ -45,10 +45,7 @@ void main(void) {
 
 	setUCB0_4Wire();
 
-	/// gestisco ad interruzione la lettura del colore
-	P2IES &= ~BIT0;                           // P2.0 Lo/Hi edge
-	P2IFG &= ~BIT0;                           // P2.0 IFG cleared
-	P2IE  |=  BIT0;                           // P2.0 interrupt enabled
+	initP20int();
 
 	// Enable interrupt
 	__bis_SR_register(GIE);
