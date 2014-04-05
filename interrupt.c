@@ -46,3 +46,17 @@ __interrupt void USCI_A1_ISR(void)
   }
 }
 
+
+volatile unsigned int contaTacche = 0;
+// Port 2 interrupt service routine
+#pragma vector=PORT2_VECTOR
+__interrupt void Port_2(void)
+{
+	contaTacche++;
+	P2IFG &= ~BIT0;                         // Clear P2.0 IFG
+	P2IE  &= ~BIT0;                         // Clear P2.0 IE
+	asm( " nop " );
+	P2IE  |= BIT0;                         	// Set P2.0 IE
+	asm( " nop " );
+}
+

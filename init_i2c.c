@@ -11,6 +11,7 @@
 
 #include <msp430x552x.h>
 #include "init.h"
+#include "sens.h"
 
 #define			MULT_READ			0
 
@@ -32,19 +33,19 @@ void initI2C_B1(unsigned long int fdco, unsigned long int speed, unsigned char d
 	UCB1BR0 = baud & 0xFF;
 	UCB1BR1 = (baud >> 8) & 0xFF;
 
-	/*switch(devAddr){
-		case GYRO_ADDR:
-			UCB1I2CSA = GYRO_ADDR;
+	switch(devAddr){
+		case COLOR_ADDR:
+			UCB1I2CSA = COLOR_ADDR;
 		break;
 
-		case ACCEL_ADDR:
-			UCB1I2CSA = ACCEL_ADDR;
+		case TEMP_ADDR:
+			UCB1I2CSA = TEMP_ADDR;
 		break;
 
-		case COMPASS_ADDR:
-			UCB1I2CSA = COMPASS_ADDR;
+		default:
+			UCB1I2CSA = 0;
 		break;
-	}*/
+	}
 
 	/// P4.2 and P4.1 in alternative mode
 	P4SEL |= 0x06;                            // Assign I2C pins to USCI_B1

@@ -56,3 +56,12 @@ void readTempSens(temp *tPtr){
 		tPtr->temperatura = (float)(buff[1] << 8) + buff[0];
 	}
 }
+
+
+void initSensCol(){
+	/// uso del pin P2.0 per ricevere i segnali dell'encoder ad interruzione
+	    P2IES &= ~BIT0;                           // P2.0 Lo/Hi edge
+	    P2IFG &= ~BIT0;                           // P2.0 IFG cleared
+	    P2IE  |=  BIT0;                           // P2.0 interrupt enabled
+}
+

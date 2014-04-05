@@ -15,6 +15,7 @@ typedef struct _colore{
 	int verde;
 	int blu;
 	int luminanza;
+	int presenza_OK;
 } colore;
 
 typedef struct _temp{
@@ -23,6 +24,8 @@ typedef struct _temp{
 
 /////
 #define			COLOR_ADDR			0x29
+#define			DEVICE_ID			0x12
+#define			TEMP_ADDR			0x33
 
 void readColourSens(colore *);
 void readTempSens(temp *tPtr);
