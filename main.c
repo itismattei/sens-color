@@ -4,16 +4,21 @@
 
 #include <msp430.h> 
 #include <stdio.h>
+#include <stdbool.h>
 #include "init.h"
 #include "sens.h"
+#include "spi.h"
 
 /*
  * main.c
  */
 extern volatile unsigned int contatore;
+volatile bool scansione;
 
 void main(void) {
 
+
+	volatile unsigned char valore = 0;
 	colore col;
 	temp tCelsius;
 	// Stop watchdog timer
@@ -25,33 +30,30 @@ void main(void) {
 	/// initialize UART1 per comunicazioni con PC
 	initUART1(19200, FDCO);
 
-	initI2C_B1(FDCO, 400000, COLOR_ADDR);
+	initI2C_B1(FDCO, 300000, COLOR_ADDR);
 	initMCU();
 	/// init port 1
 	initPort1();
-	P1REN = 2;			/// 0 0 0 0 0 0 1 0  pull up
-	P1OUT = 2;
 
-	P4DIR = 0x80;
-	P4OUT = 0x80;
 
 
 	initTIMER(FDCO);
 
 	setUCB0_4Wire();
-	printf("==========================\n\r");
-	printf("nodo colore inizializzato! \n\r");
 	// Enable interrupt
 	__bis_SR_register(GIE);
 
-	/// wait until P1.1 isn't pressed
-	while(P1IN & BIT1);
+	printf("==========================\n\r");
+	printf("nodo colore inizializzato! \n\r");
 
 	while(1){
 		/// controlla se e' ora di raccogliere il dato
-		if (contatore & 1){
+		valore = contatore & 1;
+		if ((valore == 0) && (scansione == true)){
+			scansione = false;
 			readColourSens(&col);
-			readTempSens(&tCelsius);
+
+			//readTempSens(&tCelsius);
 		}
 	}
 }

@@ -11,7 +11,6 @@
 
 
 #define CE1_ACTIVE				P2OUT |= BIT3
-
 #define CE2_ACTIVE				P2OUT |= BIT6
 
 													/// P2.3 e P2.6  = 0  :  1011 0111
@@ -27,4 +26,8 @@
 #define WRITE					0
 #define AC						(1 << 5)
 
+///
+/// funzioni di inizializzazione
+
+void setUCB0_4Wire();
 #endif /* SPI_H_ */

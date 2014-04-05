@@ -6,18 +6,23 @@
  */
 
 #include <msp430.h>
+#include <stdbool.h>
 #include "init.h"
 
 //INTERRUPT
 
 volatile unsigned int contatore = 0;
-
+extern volatile bool scansione;
 // Timer1 A0 interrupt service routine
 #pragma vector=TIMER1_A0_VECTOR
-__interrupt void TIMER1_A0_ISR(void)
-{
-	//P1OUT ^= 1;
+__interrupt void TIMER1_A0_ISR(void){
+
 	contatore++;
+	if ((contatore & 0xF) == 0)
+		/// blink del led verde
+		P4OUT ^= 0x80;
+	if ((contatore & 1) == 0)
+		scansione = true;
 }
 
 ///

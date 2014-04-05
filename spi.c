@@ -28,13 +28,13 @@
 /// This function is specific for communication between 2 other MCUs,
 /// that use P2.1 as CE
 void setUCB0_4Wire(){
-	//CS this signal is managed by master
+	//CS this signal is managed by master. UCB0 /CS e' posto sul pin P2.7
 
 	P2SEL |= BIT7;						/// P2.7 UCB1STE
 
 	/// set alternate port function
-	P3SEL |= BIT0 + BIT1; 				/// P3.0 (UCB1MOSI) e P3.1 (UCB1MISO)
-	P3SEL |= BIT2;						/// P3.2 (UCB1CLK)
+	P3SEL |= BIT0 + BIT1; 				/// P3.0 (UCB0MOSI) e P3.1 (UCB0MISO)
+	P3SEL |= BIT2;						/// P3.2 (UCB0CLK)
 
 	UCB0CTL1 |= UCSWRST;				/// the state machine is in reset mode
 	/// msb, ,master, 4 wires, sync, ck inactive low
@@ -43,10 +43,10 @@ void setUCB0_4Wire(){
 	/// msb,  4 wires, sync, ck inactive low, slave UCB1STE attivo alto
 	UCB0CTL0 |= UCMSB + UCMODE_1 + UCSYNC;
 	///
-	//UCB1CTL1 |= UCSSEL_2; 				/// clock from SMCLK
+	//UCB0CTL1 |= UCSSEL_2; 				/// clock from SMCLK
 	/// bit rate: SMCK / 4
-	//UCB1BR0 = 0x4;						/// :4
-	//UCB1BR1 = 0;
+	//UCB0BR0 = 0x4;						/// :4
+	//UCB0BR1 = 0;
 
 	UCB0CTL1 &= ~UCSWRST;				/// initialize the state machine+
 	/// interrupt enable
@@ -57,10 +57,10 @@ void setUCB0_4Wire(){
 /// transmit a byte
 void B1tx(unsigned char val){
 	/// wait until a tx operation end
-	while( UCB1STAT & UCBUSY );
-	UCB1TXBUF = val;
+	while( UCB0STAT & UCBUSY );
+	UCB0TXBUF = val;
 	/// wait until a tx operation end
-	while( UCB1STAT & UCBUSY );
+	while( UCB0STAT & UCBUSY );
 }
 
 ///
@@ -69,12 +69,12 @@ void B1tx(unsigned char val){
 unsigned char B1rx(){
 	unsigned char read;
 	/// wait until a tx operation end
-	while( UCB1STAT & UCBUSY );
-	UCB1TXBUF = 0;
+	while( UCB0STAT & UCBUSY );
+	UCB0TXBUF = 0;
 	/// wait until a tx operation end
-	while( UCB1STAT & UCBUSY );
+	while( UCB0STAT & UCBUSY );
 	/// when write operation is finished, received data is ready.
-	read = UCB1RXBUF;
+	read = UCB0RXBUF;
 	/// close connection
 		return read;
 }

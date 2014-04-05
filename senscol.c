@@ -15,13 +15,13 @@
 /// legge il sensore di colore
 void readColourSens(colore *colPtr){
 	unsigned char buff[8];
-	if (readI2C_N_Byte( 0x01, 8, buff) == 0){
+	/*if (readI2C_N_Byte( 0x01, 8, buff) == 0){
 		/// ha caricato i valori e quindi può procedere
 		colPtr->rosso = (int)(buff[1] << 8) + buff[0];
 		colPtr->verde = (int)(buff[3] << 8) + buff[2];
 		colPtr->blu = (int)(buff[5] << 8) + buff[4];
 		colPtr->luminanza = (int)(buff[7] << 8) + buff[6];
-	}
+	}*/
 }
 
 ///

@@ -66,7 +66,11 @@ void initPort1(void){
 
 	P1DIR |= BIT0;
 	P1OUT &= ~BIT0;
-
+	/// blink led per scopi di debug
+	P4DIR = 0x80;
+	P4OUT = 0x80;
+	P1DIR |= BIT0;
+	P1OUT &= ~BIT0;
 }
 
 /// ADC init with INTeRnAL REFERENCE

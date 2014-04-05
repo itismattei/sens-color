@@ -22,7 +22,7 @@ typedef struct _temp{
 } temp;
 
 /////
-#define			COLOR_ADDR			0x01
+#define			COLOR_ADDR			0x29
 
 void readColourSens(colore *);
 void readTempSens(temp *tPtr);
