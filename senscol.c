@@ -5,7 +5,7 @@
  *      Author: robotis
  */
 
-
+#include <msp430.h>
 #include "sens.h"
 #include "init.h"
 #include <math.h>

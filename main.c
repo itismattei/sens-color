@@ -31,7 +31,7 @@ void main(void) {
 	/// initialize UART1 per comunicazioni con PC
 	initUART1(19200, FDCO);
 
-	initI2C_B1(FDCO, 100000, COLOR_ADDR);
+
 	initMCU();
 	/// init port 1
 	initPort1();
@@ -44,22 +44,20 @@ void main(void) {
 	initTIMER(FDCO);
 
 	setUCB0_4Wire();
+
+	/// gestisco ad interruzione la lettura del colore
+	P2IES &= ~BIT0;                           // P2.0 Lo/Hi edge
+	P2IFG &= ~BIT0;                           // P2.0 IFG cleared
+	P2IE  |=  BIT0;                           // P2.0 interrupt enabled
+
 	// Enable interrupt
 	__bis_SR_register(GIE);
+
 
 	printf("==========================\n\r");
 	printf("nodo colore inizializzato! \n\r");
 
-	valore = readI2CByteFromAddress(DEVICE_ID, &stato);
-	if (valore == 0x18)
-		col.presenza_OK = 1;
-	valore = writeI2CByte(0, 3);
-	valore = readI2CByteFromAddress(0, &stato);
-	valore = readI2CByteFromAddress(1, &stato);
-	valore = readI2CByteFromAddress(3, &stato);
-	valore = readI2CByteFromAddress(4, &stato);
-	valore = writeI2CByte(0x13,0);
-	valore = readI2CByteFromAddress(0x13, &stato);
+
 	while(1){
 		/// controlla se e' ora di raccogliere il dato
 		valore = contatore & 1;
