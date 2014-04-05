@@ -12,8 +12,8 @@
 /*
  * main.c
  */
-extern volatile unsigned int contatore;
-volatile bool scansione;
+extern volatile unsigned int contatore, contaImpulsi;
+volatile bool scansione, letturaCampioni;
 
 void main(void) {
 
@@ -57,15 +57,19 @@ void main(void) {
 	printf("==========================\n\r");
 	printf("nodo colore inizializzato! \n\r");
 
+	letturaCampioni = false;
 
 	while(1){
 		/// controlla se e' ora di raccogliere il dato
 		valore = contatore & 1;
-		if ((valore == 0) && (scansione == true)){
-			scansione = false;
-			readColourSens(&col);
+		if (letturaCampioni == true){
+			letturaCampioni = false;
+		///	scansione = false;
+		///	readColourSens(&col);
 
 			//readTempSens(&tCelsius);
+			col.luminanza = contaImpulsi;
+			contaImpulsi = 0;
 		}
 	}
 }
