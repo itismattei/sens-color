@@ -9,6 +9,7 @@
 #include "sens.h"
 #include "init.h"
 #include <math.h>
+#include <msp430.h>
 
 
 ///
