@@ -24,7 +24,7 @@ typedef struct _temp{
 /////
 #define			COLOR_ADDR			0x29
 #define			DEVICE_ID			0x12
-#define			TEMP_ADDR			0x33
+#define			TEMP_ADDR			0x00
 
 void readColourSens(colore *);
 void readTempSens(temp *tPtr);
