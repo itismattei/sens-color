@@ -18,6 +18,14 @@ typedef struct _colore{
 	int bianco;
 } colore;
 
+typedef struct _tile{
+	char isDark;
+} tile;
+
+typedef struct _survivor{
+	char isSurvivor;
+} survivor;
+
 typedef struct _temp{
 	float 	Temp;
 	int 	tempRaw;
@@ -37,5 +45,19 @@ void readTemp(temperatura *tempPtr);
 
 
 #define 	SOGLIAFERITO 			600
+#define		SOGLIA_DARK_TILE		-100
+
+///
+/// messaggi
+#define			IS_WALL				0x80
+#define			IS_DARK_TILE		0x08
+#define			IS_SURVIOR			0x40
+#define			NO_DARK_TILE		0x04
+#define			NO_SURVIVOR			0x20
+#define			GET_WALL			0x81
+#define			GET_DARK_TILE		0x09
+#define			GET_SURVIVOR		0x41
+
+
 
 #endif /* SENS_H_ */

@@ -14,6 +14,8 @@
  */
 extern volatile unsigned int contatore, contaImpulsi;
 volatile bool scansione, letturaCampioni, leggiSensCol;
+volatile tile *tilePTR;
+volatile survivor *survPTR;
 
 void main(void) {
 
@@ -21,9 +23,13 @@ void main(void) {
 	char stato;
 	unsigned char buffer[4];
 	colore col;
+	tile mattonella;
 	temperatura T;
+	survivor S;
 	int Temp;
 	bool presenzaFerito = false;
+	tilePTR = &mattonella;
+	survPTR = &S;
 	// Stop watchdog timer
 	WDTCTL = WDTPW | WDTHOLD;
 
@@ -48,6 +54,7 @@ void main(void) {
 	setUCB0_4Wire();
 
 	initP20int();
+	initSensCol();
 
 	// Enable interrupt
 	__bis_SR_register(GIE);
@@ -75,12 +82,19 @@ void main(void) {
 			//readTempSens(&tCelsius);
 			col.luminanza = contaImpulsi;
 			contaImpulsi = 0;
+			if (col.luminanza - col.bianco < SOGLIA_DARK_TILE){
+				mattonella.isDark = IS_DARK_TILE;
+			}
+			if (col.luminanza - col.bianco > SOGLIA_DARK_TILE + 50){
+				mattonella.isDark = NO_DARK_TILE;
+			}
+
 		}
 		/// adesso deve leggere il sensore di temperatura, ogni 200 ms
-		if ((contatore & 4) == 0){
+		if ((contatore & 3) == 0){
 			readTemp(&T);
 			if (T.tempRaw - T.T_tar > SOGLIAFERITO)
-				presenzaFerito = true;
+				S.isSurvivor = IS_SURVIOR;
 		}
 
 	}
