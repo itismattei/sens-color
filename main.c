@@ -56,9 +56,9 @@ void main(void) {
 	printf("nodo colore inizializzato! \n\r");
 
 	//valore = readI2CByteFromAddress(DEVICE_ID, &stato);
-	while(1)
-		valore = readI2C_N_Byte( 0x07, 3, buffer);
-	/*if (valore == 0x18)
+
+
+
 	while(1){
 		/// controlla se e' ora di raccogliere il dato
 		valore = contatore & 1;
@@ -71,5 +71,8 @@ void main(void) {
 			col.luminanza = contaImpulsi;
 			contaImpulsi = 0;
 		}
+		/// adesso deve leggere il sensore di temperatura
+		valore = readI2C_N_Byte( 0x07, 3, buffer);
+
 	}
 }

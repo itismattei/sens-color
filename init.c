@@ -69,8 +69,26 @@ void initPort1(void){
 	/// blink led per scopi di debug
 	P4DIR = 0x80;
 	P4OUT = 0x80;
+	/// tasto di avvio, se serve
 	P1DIR |= BIT0;
 	P1OUT &= ~BIT0;
+	/// P4.1, P4.2 I2C impostato nella I2C init
+	/// P2.0 inizializzatat in P20Init
+	/// PIN di comando del sensore di luminosità:
+	/// P2.2-3,  P2.6, P7.4, P8.1
+	/// S0 - S1 = H H; S2 = H
+
+	P2DIR |= BIT2 + BIT3 + BIT6;
+	P2OUT |= BIT2 + BIT3 + BIT6;
+	/// S3 = L : selezione del bianco e PWM massimo
+	P7DIR |= BIT4;
+	P7OUT &= ~BIT4;
+	/// output enable del chip
+	P8DIR |= BIT1;
+	/// chip spento
+	P8DIR |= BIT1;
+
+
 }
 
 /// ADC init with INTeRnAL REFERENCE
