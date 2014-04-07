@@ -51,6 +51,7 @@ void setUCB0_4Wire(){
 	UCB0CTL1 &= ~UCSWRST;				/// initialize the state machine+
 	/// interrupt enable
 	UCB0IE |= UCRXIE;
+	UCB0TXBUF = 0xFF;
 }
 
 ///
