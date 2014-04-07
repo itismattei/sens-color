@@ -12,8 +12,8 @@
 /*
  * main.c
  */
-extern volatile unsigned int contatore;
-volatile bool scansione;
+extern volatile unsigned int contatore, contaImpulsi;
+volatile bool scansione, letturaCampioni;
 
 void main(void) {
 
@@ -45,8 +45,12 @@ void main(void) {
 	initTIMER(FDCO);
 
 	setUCB0_4Wire();
+
+	initP20int();
+
 	// Enable interrupt
 	__bis_SR_register(GIE);
+
 
 	printf("==========================\n\r");
 	printf("nodo colore inizializzato! \n\r");
@@ -55,22 +59,17 @@ void main(void) {
 	while(1)
 		valore = readI2C_N_Byte( 0x07, 3, buffer);
 	/*if (valore == 0x18)
-		col.presenza_OK = 1;
-	valore = writeI2CByte(0, 3);
-	valore = readI2CByteFromAddress(0, &stato);
-	valore = readI2CByteFromAddress(1, &stato);
-	valore = readI2CByteFromAddress(3, &stato);
-	valore = readI2CByteFromAddress(4, &stato);
-	valore = writeI2CByte(0x13,0);
-	valore = readI2CByteFromAddress(0x13, &stato);*/
 	while(1){
 		/// controlla se e' ora di raccogliere il dato
 		valore = contatore & 1;
-		if ((valore == 0) && (scansione == true)){
-			scansione = false;
-			readColourSens(&col);
+		if (letturaCampioni == true){
+			letturaCampioni = false;
+		///	scansione = false;
+		///	readColourSens(&col);
 
 			//readTempSens(&tCelsius);
+			col.luminanza = contaImpulsi;
+			contaImpulsi = 0;
 		}
 	}
 }
