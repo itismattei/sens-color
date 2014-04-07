@@ -12,31 +12,39 @@
 //INTERRUPT
 
 volatile unsigned int contatore = 0;
-extern volatile bool scansione, letturaCampioni;
+extern volatile bool scansione, letturaCampioni, leggiSensCol;
 // Timer1 A0 interrupt service routine
 #pragma vector=TIMER1_A0_VECTOR
 __interrupt void TIMER1_A0_ISR(void){
-
+	int rit = 10;
 	contatore++;
 	if ((contatore & 0xF) == 0)
 		/// blink del led verde
 		P4OUT ^= 0x80;
 	if ((contatore & 1) == 0){
-		/// apre la finestra di conteggio degli impulsi proporzionali alla luminosita'
-		/// durata della finestra: 50 ms
-		scansione = true;
-		letturaCampioni = false;
-		P2IE  |= BIT0;                         	// Set P2.0 IE
+		/// potrebbe essere ora di campionare il sensore di colore
+		if(leggiSensCol == true){
+			/// accende il led
+			P8OUT &= ~BIT1;
+			while(--rit > 0);
+			/// apre la finestra di conteggio degli impulsi proporzionali alla luminosita'
+			/// durata della finestra: 50 ms
+			scansione = true;
+			letturaCampioni = false;
+			P2IE  |= BIT0;                         	// Set P2.0 IE
+			leggiSensCol = false;
+		}
+		else{
+			/// chiude la finestra di conteggio degli impulsi proporzionali alla luminosita'
+			scansione = false;
+			letturaCampioni = true;
+			/// pulsce il flag in modo che non esegua una eventuale interruzione pendente
+			/// dovrebbe essere una azione atomica.
+			P2IE  &= ~BIT0;
+			P2IFG &= ~BIT0;
+		}
 	}
-	else{
-		/// chiude la finestra di conteggio degli impulsi proporzionali alla luminosita'
-		scansione = false;
-		letturaCampioni = true;
-		/// pulsce il flag in modo che non esegua una eventuale interruzione pendente
-		/// dovrebbe essere una azione atomica.
-		P2IE  &= ~BIT0;
-		P2IFG &= ~BIT0;
-	}
+
 }
 
 ///
