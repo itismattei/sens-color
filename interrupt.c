@@ -12,7 +12,7 @@
 //INTERRUPT
 
 volatile unsigned int contatore = 0;
-extern volatile bool scansione;
+extern volatile bool scansione, letturaCampioni;
 // Timer1 A0 interrupt service routine
 #pragma vector=TIMER1_A0_VECTOR
 __interrupt void TIMER1_A0_ISR(void){
@@ -21,8 +21,22 @@ __interrupt void TIMER1_A0_ISR(void){
 	if ((contatore & 0xF) == 0)
 		/// blink del led verde
 		P4OUT ^= 0x80;
-	if ((contatore & 1) == 0)
+	if ((contatore & 1) == 0){
+		/// apre la finestra di conteggio degli impulsi proporzionali alla luminosita'
+		/// durata della finestra: 50 ms
 		scansione = true;
+		letturaCampioni = false;
+		P2IE  |= BIT0;                         	// Set P2.0 IE
+	}
+	else{
+		/// chiude la finestra di conteggio degli impulsi proporzionali alla luminosita'
+		scansione = false;
+		letturaCampioni = true;
+		/// pulsce il flag in modo che non esegua una eventuale interruzione pendente
+		/// dovrebbe essere una azione atomica.
+		P2IE  &= ~BIT0;
+		P2IFG &= ~BIT0;
+	}
 }
 
 ///
@@ -47,16 +61,19 @@ __interrupt void USCI_A1_ISR(void)
 }
 
 
-volatile unsigned int contaTacche = 0;
+volatile unsigned int contaImpulsi = 0;
 // Port 2 interrupt service routine
 #pragma vector=PORT2_VECTOR
 __interrupt void Port_2(void)
 {
-	contaTacche++;
-	P2IFG &= ~BIT0;                         // Clear P2.0 IFG
-	P2IE  &= ~BIT0;                         // Clear P2.0 IE
-	asm( " nop " );
-	P2IE  |= BIT0;                         	// Set P2.0 IE
-	asm( " nop " );
+	/// se la finestra di conteggio e' attiva esegue il conteggio, altrimenti e' in pausa
+	if (scansione == true){
+		contaImpulsi++;
+		P2IFG &= ~BIT0;                         // Clear P2.0 IFG
+		P2IE  &= ~BIT0;                         // Clear P2.0 IE
+		asm( " nop " );
+		P2IE  |= BIT0;                         	// Set P2.0 IE
+		asm( " nop " );
+	}
 }
 
