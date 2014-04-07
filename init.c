@@ -86,7 +86,7 @@ void initPort1(void){
 	/// output enable del chip
 	P8DIR |= BIT1;
 	/// chip spento
-	P8DIR |= BIT1;
+	P8OUT |= BIT1;
 
 
 }

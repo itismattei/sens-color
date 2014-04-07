@@ -13,16 +13,17 @@
  * main.c
  */
 extern volatile unsigned int contatore, contaImpulsi;
-volatile bool scansione, letturaCampioni;
+volatile bool scansione, letturaCampioni, leggiSensCol;
 
 void main(void) {
-
 
 	volatile unsigned char valore = 0;
 	char stato;
 	unsigned char buffer[4];
 	colore col;
-	temp tCelsius;
+	temperatura T;
+	int Temp;
+	bool presenzaFerito = false;
 	// Stop watchdog timer
 	WDTCTL = WDTPW | WDTHOLD;
 
@@ -51,17 +52,21 @@ void main(void) {
 	// Enable interrupt
 	__bis_SR_register(GIE);
 
+	/// taratura del sensore di colore: genera una finestra da 50 ms e legge il valore del "bianco"
 
 	printf("==========================\n\r");
 	printf("nodo colore inizializzato! \n\r");
 
 	//valore = readI2CByteFromAddress(DEVICE_ID, &stato);
-
+	taraturaSensCol(&col);
+	taraturaTemp(&T);
 
 
 	while(1){
-		/// controlla se e' ora di raccogliere il dato
-		valore = contatore & 1;
+		/// il dato di luminosità si raccoglie ogni 100 ms
+
+		/// controlla se e' ora di raccogliere il dato di colore
+
 		if (letturaCampioni == true){
 			letturaCampioni = false;
 		///	scansione = false;
@@ -71,8 +76,12 @@ void main(void) {
 			col.luminanza = contaImpulsi;
 			contaImpulsi = 0;
 		}
-		/// adesso deve leggere il sensore di temperatura
-		valore = readI2C_N_Byte( 0x07, 3, buffer);
+		/// adesso deve leggere il sensore di temperatura, ogni 200 ms
+		if ((contatore & 4) == 0){
+			readTemp(&T);
+			if (T.tempRaw - T.T_tar > SOGLIAFERITO)
+				presenzaFerito = true;
+		}
 
 	}
 }
