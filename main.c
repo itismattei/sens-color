@@ -37,24 +37,24 @@ void main(void) {
 	setDCO(FDCO);
 
 	/// initialize UART1 per comunicazioni con PC
-	initUART1(19200, FDCO);
+	//initUART1(19200, FDCO);
 
 	initI2C_B1(FDCO, 100000, TEMP_ADDR);
-	initMCU();
+	//initMCU();
 	/// init port 1
-	initPort1();
-	P1REN =  BIT1;			/// 0 0 0 0 0 0 1 0  pull up
-	P1OUT |= BIT1;
+	//initPort1();
+	//P1REN =  BIT1;			/// 0 0 0 0 0 0 1 0  pull up
+	//P1OUT |= BIT1;
 	/// wait until P1.1 isn't pressed
-	while(P1IN & BIT1);
+	//while(P1IN & BIT1);
 
 
 	initTIMER(FDCO);
 
-	setUCB0_4Wire();
+	//setUCB0_4Wire();
 
-	initP20int();
-	initSensCol();
+	//initP20int();
+	//initSensCol();
 
 	// Enable interrupt
 	__bis_SR_register(GIE);
@@ -65,7 +65,8 @@ void main(void) {
 	printf("nodo colore inizializzato! \n\r");
 
 	//valore = readI2CByteFromAddress(DEVICE_ID, &stato);
-	taraturaSensCol(&col);
+	//taraturaSensCol(&col);
+	readTemp(&T);
 	taraturaTemp(&T);
 
 
